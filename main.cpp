@@ -3,8 +3,12 @@
 //
 
 #include <iostream>
+#include "JSON.h"
 
 int main()
 {
-  std::cout << "Hello World!" << std::endl;
+  JSONValue test;
+  test.data = 4;
+
+  std::cout << std::get<int>(test.data);
 }
