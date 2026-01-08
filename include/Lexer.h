@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <string>
 
 enum class TokenType
 {
@@ -20,3 +21,8 @@ enum class TokenType
   END_OF_FILE     // Only used to mark the end
 };
 
+struct Token
+{
+  TokenType type;
+  std::string value;
+};
