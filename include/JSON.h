@@ -8,6 +8,19 @@
 #include <map>
 #include <string>
 
+/**
+ * @struct JSONValue
+ * @brief Represents a JSON-compatible data structure that can hold various types of values.
+ *
+ * The JSONValue structure is used to represent JSON data. It supports the following types:
+ * - Null values
+ * - Integers
+ * - Floating-point numbers
+ * - Boolean values
+ * - Strings
+ * - JSON arrays (std::vector<JSONValue>)
+ * - JSON objects (std::map<std::string, JSONValue>)
+ */
 struct JSONValue
 {
   std::variant<std::monostate, int, double, bool, std::string, std::vector<JSONValue>, std::map<std::string, JSONValue>> data;
