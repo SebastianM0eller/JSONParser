@@ -44,3 +44,27 @@ struct Token
   TokenType type;
   std::string value;
 };
+
+/**
+ * @class Lexer
+ * @brief A class responsible for tokenizing input strings.
+ *
+ * The Lexer class is used to process input strings and generate a sequence
+ * of tokens based on predefined token types. It serves as a foundational
+ * component for parsing and analyzing structured input.
+ */
+class Lexer
+{
+public:
+  static std::vector<Token> Tokenize(const std::string& input);
+
+private:
+  Lexer(const std::string_view source) : m_source(source), m_index(0) {}
+  ~Lexer() = default;
+
+  std::string_view m_source;
+  int m_index;
+
+  void SkipWhitespace();
+  Token nextToken();
+};
