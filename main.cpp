@@ -3,12 +3,23 @@
 //
 
 #include <iostream>
-#include "JSON.h"
+#include "Lexer.h"
 
 int main()
 {
-  JSONValue test;
-  test.data = 4;
+  std::string source = R"(
+{
+    "user_id": 42,
+    "score": 98.6,
+    "is_active": true,
+    "history": [ null, 0, 10.50 ],
+    "mode": "advanced"
+}
+)";
 
-  std::cout << std::get<int>(test.data);
+  std::vector Tokens = Lexer::Tokenize(source);
+  for (auto token : Tokens)
+  {
+    std::cout << token.ToString() << "  " << token.value << std::endl;
+  }
 }
