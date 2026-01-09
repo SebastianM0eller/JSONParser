@@ -9,9 +9,9 @@ JSONValue Parser::Parse(std::vector<Token> Tokens)
 {
   Parser instance(Tokens);
 
-  if (instance.Peek().type == TokenType::LEFT_BRACE)
+  if (instance.Peek().type == TokenType::END_OF_FILE)
   {
-    return JSONValue();
+    return {JSONValue()};
   }
 
   JSONValue value = instance.ParseValue();
@@ -21,6 +21,7 @@ JSONValue Parser::Parse(std::vector<Token> Tokens)
     throw std::runtime_error("Unexpected data after end of JSON");
   }
 
+  return value;
 }
 
 JSONValue Parser::ParseValue()
@@ -31,12 +32,12 @@ JSONValue Parser::ParseValue()
   {
   case TokenType::LEFT_BRACE:
     {
-      //return ParseObject();
+      return ParseObject();
     }
 
   case TokenType::LEFT_BRACKET:
     {
-      //return ParseArray();
+      return ParseArray();
     }
 
   case TokenType::STRING:
@@ -74,7 +75,7 @@ JSONValue Parser::ParseValue()
   case TokenType::NULL_TYPE:
     {
       Next();
-      return JSONValue(); // std::monostate
+      return {}; // std::monostate
     }
 
   default:
