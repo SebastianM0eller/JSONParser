@@ -49,6 +49,18 @@ void Lexer::SkipWhitespace()
   }
 }
 
+/**
+ * Extracts and returns the next token from the source input.
+ *
+ * This method analyzes the current position in the source string,
+ * skips over whitespace, and attempts to identify the next valid token.
+ * Tokens are categorized by type such as braces, brackets, numbers,
+ * strings, booleans, or the end of the input. If no recognized token
+ * is found, an UNKNOWN token is returned.
+ *
+ * @return The next token in the source input. If the end of the source
+ *         is reached, a token of type END_OF_FILE is returned.
+ */
 Token Lexer::nextToken()
 {
   SkipWhitespace();
@@ -80,7 +92,7 @@ Token Lexer::nextToken()
 }
 
 /**
- * Helper function for 1-char tokens (move index forward by one, and return the token type)
+ * Helper function for 1-char tokens (move index forward by one and return the token type)
  */
 
 Token Lexer::SimpleToken(TokenType type)
@@ -90,6 +102,17 @@ Token Lexer::SimpleToken(TokenType type)
   return Token{type, m_source.substr(start, 1)};
 }
 
+/**
+ * Extracts a string token from the source by processing content enclosed in double quotes.
+ *
+ * This method identifies and extracts a substring between two double-quote characters
+ * from the current index in the source. The initial and final quotes are skipped during
+ * processing. If the quotes are properly balanced, a token of type `TokenType::STRING`
+ * is returned with the extracted string value.
+ *
+ * @return A `Token` object with `TokenType::STRING`, representing the extracted string,
+ *         or an incomplete token if the input source ends unexpectedly.
+ */
 Token Lexer::StringToken()
 {
   m_index++; // Skip the initial quote "
@@ -106,6 +129,16 @@ Token Lexer::StringToken()
   return Token{TokenType::STRING, str};
 }
 
+/**
+ * Processes and extracts a numeric token (integer or decimal) from the source string.
+ *
+ * This method identifies and returns either an integer or a double token. If the number
+ * starts with a negative sign ('-'), it will be included as part of the token. For decimal
+ * numbers, the method identifies and processes the fractional part following a '.'.
+ *
+ * @return A Token object representing the numeric value. The token type will be
+ *         TokenType::INT for integers or TokenType::DOUBLE for decimal numbers.
+ */
 Token Lexer::NumberToken()
 {
   const unsigned int start = m_index;
@@ -135,6 +168,17 @@ Token Lexer::NumberToken()
   return Token(TokenType::INT, m_source.substr(start, m_index - start));
 }
 
+/**
+ * Extracts and returns a token representing a boolean value, null literal, or unknown.
+ *
+ * This method reads a sequence of alphanumeric characters from the input source
+ * starting at the current index. If the sequence matches one of the keywords
+ * "true", "false", or "null", a corresponding token is returned. If the sequence
+ * does not match any of these literals, an UNKNOWN token is returned.
+ *
+ * @return A Token object representing a boolean value (TRUE or FALSE), a NULL_TYPE
+ *         token for the "null" literal, or an UNKNOWN token if no match is found.
+ */
 Token Lexer::BoolOrNullToken()
 {
   unsigned int start = m_index;

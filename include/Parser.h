@@ -6,6 +6,13 @@
 #include "JSONValue.h"
 #include "Token.h"
 
+/**
+ * @class Parser
+ * @brief A utility class for parsing JSON data represented as a sequence of tokens.
+ *
+ * The Parser class provides methods to parse tokens into a structured JSONValue.
+ * It supports parsing JSON objects, arrays, strings, numbers, booleans, and null values.
+ */
 class Parser
 {
 public:

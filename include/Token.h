@@ -46,6 +46,16 @@ struct Token
   TokenType type;
   std::string_view value;
 
+  /**
+   * @brief Converts the TokenType of the token to its string representation.
+   *
+   * This method provides a string-based description of the token's type
+   * for easy identification and debugging purposes.
+   *
+   * @return A string representation of the token type, such as "LEFT_BRACE",
+   *         "RIGHT_BRACE", "STRING", "EOF", etc. Returns "UNKNOWN" if the token
+   *         type does not match any predefined types.
+   */
   [[nodiscard]] std::string ToString() const
   {
     switch (type)
