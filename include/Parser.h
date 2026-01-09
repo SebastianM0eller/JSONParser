@@ -19,6 +19,8 @@ private:
   unsigned int m_index;
 
   JSONValue ParseValue();
+  JSONValue ParseObject();
+  JSONValue ParseArray();
 
   [[nodiscard]] Token Peek() const;
   Token Next();

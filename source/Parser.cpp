@@ -4,6 +4,7 @@
 
 #include "Parser.h"
 #include <stdexcept>
+#include <bits/locale_facets_nonio.h>
 
 JSONValue Parser::Parse(std::vector<Token> Tokens)
 {
@@ -76,6 +77,35 @@ JSONValue Parser::ParseValue()
       throw std::runtime_error("Unexpected token type" + std::string(token.value));
     }
   }
+}
+
+JSONValue Parser::ParseObject()
+{
+  Expect(TokenType::LEFT_BRACE);
+  Next(); // Eat beginning brace
+
+  std::map<std::string, JSONValue> value;
+
+  while (Peek().type != TokenType::RIGHT_BRACE)
+  {
+    Expect(TokenType::STRING);
+    std::string key = std::string(Peek().value);
+    Next();
+
+    Expect(TokenType::COLON);
+    Next();
+
+    value[key] = ParseValue();
+
+    if (Peek().type != TokenType::RIGHT_BRACE)
+    {
+      Expect(TokenType::COMMA);
+      Next();
+    }
+  }
+
+  Next(); // Eat the ending brace
+  return JSONValue{value};
 }
 
 Token Parser::Peek() const
