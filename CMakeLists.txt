@@ -16,6 +16,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_sources(${PROJECT_NAME} PRIVATE
     source/Lexer.cpp
     source/Parser.cpp
+    source/JSON.cpp
 )
 
 # Compile Options
