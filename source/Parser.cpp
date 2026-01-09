@@ -16,7 +16,7 @@
  * @return A JSONValue object representing the parsed JSON structure.
  * @throws std::runtime_error If the input contains unexpected data after the end of a valid JSON structure.
  */
-JSONValue Parser::Parse(std::vector<Token> Tokens)
+JSONValue Parser::Parse(const std::vector<Token>& Tokens)
 {
   Parser instance(Tokens);
 

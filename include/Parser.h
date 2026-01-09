@@ -16,7 +16,7 @@
 class Parser
 {
 public:
-  static JSONValue Parse(std::vector<Token> Tokens);
+  static JSONValue Parse(const std::vector<Token>& Tokens);
 
 private:
   Parser(const std::vector<Token>& tokens) : m_tokens(tokens), m_index(0) {}
