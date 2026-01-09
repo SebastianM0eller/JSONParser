@@ -28,6 +28,9 @@ std::vector<Token> Lexer::Tokenize(const std::string_view& source)
     token = instance.nextToken();
   }
 
+  // Remember the EOF token
+  tokens.push_back(token);
+
   return tokens;
 }
 
