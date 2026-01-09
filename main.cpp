@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "JSON.h"
+#include "JSONValue.h"
 #include "Lexer.h"
 #include "Parser.h"
 
