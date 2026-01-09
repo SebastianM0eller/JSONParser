@@ -2,7 +2,23 @@
 // Created by sebastian on 1/9/26.
 //
 
-#ifndef JSONPARSER_PARSER_H
-#define JSONPARSER_PARSER_H
+#pragma once
+#include "JSON.h"
+#include "Token.h"
 
-#endif //JSONPARSER_PARSER_H
+class Parser
+{
+public:
+  static JSONValue Parse(std::vector<Token> Tokens);
+
+private:
+  Parser(const std::vector<Token>& tokens) : m_tokens(tokens), m_index(0) {}
+  ~Parser() = default;
+
+  std::vector<Token> m_tokens;
+  unsigned int m_index;
+
+  Token Peek() const;
+  Token Next();
+  void Expect(TokenType type) const;
+};

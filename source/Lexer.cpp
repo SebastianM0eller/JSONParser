@@ -16,7 +16,7 @@
  * @return A vector of tokens representing the tokens of the input source.
  */
 
-std::vector<Token> Lexer::Tokenize(const std::string_view source)
+std::vector<Token> Lexer::Tokenize(const std::string_view& source)
 {
   std::vector<Token> tokens;
   Lexer instance(source);
