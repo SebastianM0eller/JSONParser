@@ -23,6 +23,6 @@ private:
   JSONValue ParseArray();
 
   [[nodiscard]] Token Peek() const;
-  Token Next();
+  void Next();
   void Expect(TokenType type) const;
 };

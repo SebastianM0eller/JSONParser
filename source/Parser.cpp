@@ -4,16 +4,21 @@
 
 #include "Parser.h"
 #include <stdexcept>
-#include <bits/locale_facets_nonio.h>
 
 JSONValue Parser::Parse(std::vector<Token> Tokens)
 {
   Parser instance(Tokens);
 
-  while (instance.Peek().type != TokenType::END_OF_FILE)
+  if (instance.Peek().type == TokenType::LEFT_BRACE)
   {
-    // ToDo:
-    return {};
+    return JSONValue();
+  }
+
+  JSONValue value = instance.ParseValue();
+
+  if (instance.Peek().type != TokenType::END_OF_FILE)
+  {
+    throw std::runtime_error("Unexpected data after end of JSON");
   }
 
 }
@@ -104,8 +109,33 @@ JSONValue Parser::ParseObject()
     }
   }
 
+  Expect(TokenType::RIGHT_BRACE);
   Next(); // Eat the ending brace
   return JSONValue{value};
+}
+
+JSONValue Parser::ParseArray()
+{
+  Expect(TokenType::LEFT_BRACKET);
+  Next(); // Eat beginning bracket
+
+  std::vector<JSONValue> value;
+
+  while (Peek().type != TokenType::RIGHT_BRACKET)
+  {
+    value.push_back(ParseValue());
+
+    if (Peek().type != TokenType::RIGHT_BRACKET)
+    {
+      Expect(TokenType::COMMA);
+      Next();
+    }
+  }
+
+  Expect(TokenType::RIGHT_BRACKET);
+  Next(); // Eat ending bracket
+  return JSONValue{value};
+
 }
 
 Token Parser::Peek() const
@@ -113,9 +143,9 @@ Token Parser::Peek() const
   return m_tokens.at(m_index);
 }
 
-Token Parser::Next()
+void Parser::Next()
 {
-  return m_tokens.at(m_index++);
+  m_index++;
 }
 
 void Parser::Expect(const TokenType type) const
