@@ -69,6 +69,7 @@ Token Lexer::nextToken()
     case ':': return SimpleToken(TokenType::COLON);
     case ',': return SimpleToken(TokenType::COMMA);
     case '"': return StringToken();
+    case '-': return NumberToken();
 
     default:
       if (std::isdigit(c)) return NumberToken();
@@ -108,6 +109,10 @@ Token Lexer::StringToken()
 Token Lexer::NumberToken()
 {
   const unsigned int start = m_index;
+
+  // Check if it was a negative number.
+  if (m_source[m_index] == '-') m_index++;
+
   while (m_index < m_source.length() && std::isdigit(m_source[m_index]))
   {
     m_index++;
