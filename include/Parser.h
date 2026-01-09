@@ -18,7 +18,9 @@ private:
   std::vector<Token> m_tokens;
   unsigned int m_index;
 
-  Token Peek() const;
+  JSONValue ParseValue();
+
+  [[nodiscard]] Token Peek() const;
   Token Next();
   void Expect(TokenType type) const;
 };
