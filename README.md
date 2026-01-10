@@ -3,7 +3,7 @@
 > A simple C++23 JSON parsing library.
 
 ## About
-The aim of this project is to learn more about C++23, and JSONs.
+The aim of this project is to learn more about C++ and JSONs.
 * **Standard:** C++23
 * **BuildSystem:** CMake 3.30+
 
@@ -67,3 +67,4 @@ JSONValue val = JSON::Load("filename.json");
 - [ ] Add support for scientific notation e.g. 3e10, 1.3e-5 or -0.5e+2.
 - [ ] Add some tests to validate the library.
 - [ ] Add support for all standard escape sequences.
+- [ ] Add documentation on how to access data in the JSONValue.
