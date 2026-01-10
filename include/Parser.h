@@ -28,6 +28,7 @@ private:
   JSONValue ParseValue();
   JSONValue ParseObject();
   JSONValue ParseArray();
+  std::string ParseString(const std::string_view& str);
 
   [[nodiscard]] Token Peek() const;
   void Next();

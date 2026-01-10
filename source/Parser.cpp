@@ -73,6 +73,7 @@ JSONValue Parser::ParseValue()
   case TokenType::STRING:
     {
       Next();
+      // std::string value = ParseString(token.value)
       std::string value = std::string(token.value);
       return JSONValue(value);
     }
@@ -195,6 +196,34 @@ JSONValue Parser::ParseArray()
   Next(); // Eat ending bracket
   return JSONValue{value};
 
+}
+
+std::string Parser::ParseString(const std::string_view& str)
+{
+  std::string value;
+  value.reserve(str.size()); // Reserves memory for the worst case scenario.
+
+  for (unsigned int i = 0; i < str.length(); i++)
+  {
+    if (str[i] == '\\' && i + 1 < str.length())
+    {
+      switch (str[i + 1]) // We check the char after the '\'
+      {
+        case '"': value += '"'; break;
+        case 'n': value += '\n'; break;
+        case 't': value += '\t'; break;
+        case 'r': value += '\r'; break;
+        case '\\': value += '\\'; break;
+        default: value += str[i + 1];
+      }
+      i++; // Eat the char
+    }
+    else
+    {
+      value += str[i];
+    }
+  }
+  return value;
 }
 
 /**
