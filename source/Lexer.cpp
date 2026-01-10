@@ -117,8 +117,18 @@ Token Lexer::StringToken()
 {
   m_index++; // Skip the initial quote "
   const unsigned int start = m_index;
-  while (m_source[m_index] != '"')
+
+  while (m_index < m_source.length())
   {
+    if (m_source[m_index] == '\\')
+    {
+      m_index += 2;
+      continue;
+    }
+    else if (m_source[m_index] == '"')
+    {
+      break;
+    }
     m_index++;
   }
 

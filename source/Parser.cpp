@@ -73,8 +73,7 @@ JSONValue Parser::ParseValue()
   case TokenType::STRING:
     {
       Next();
-      // std::string value = ParseString(token.value)
-      std::string value = std::string(token.value);
+      std::string value = ParseString(token.value);
       return JSONValue(value);
     }
 
