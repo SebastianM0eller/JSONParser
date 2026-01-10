@@ -6,17 +6,23 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Main executable
-add_executable(${PROJECT_NAME} main.cpp)
+# Create the library
+add_library(${PROJECT_NAME} STATIC)
+
+# Sources
+target_sources(${PROJECT_NAME} PRIVATE
+        source/JSON.cpp
+        source/Lexer.cpp
+        source/Parser.cpp
+        source/Lexer.h
+        source/Parser.h
+        source/Token.h
+)
 
 # Include files
-target_include_directories(${PROJECT_NAME} PUBLIC include)
-
-# Source files
-target_sources(${PROJECT_NAME} PRIVATE
-    source/Lexer.cpp
-    source/Parser.cpp
-    source/JSON.cpp
+target_include_directories(${PROJECT_NAME}
+        PUBLIC include
+        PRIVATE source
 )
 
 # Compile Options
@@ -28,3 +34,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         /W4 /permissive-
         >
 )
+
+add_executable(JSONParserTest main.cpp)
+target_link_libraries(JSONParserTest PRIVATE ${PROJECT_NAME})

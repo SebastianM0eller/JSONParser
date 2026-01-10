@@ -3,8 +3,8 @@
 //
 
 #pragma once
-#include "JSONValue.h"
-#include "Token.h"
+#include "../include/JSONValue.h"
+#include "../source/Token.h"
 
 /**
  * @class Parser
