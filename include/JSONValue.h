@@ -42,6 +42,13 @@ struct JSONValue
     return std::get<std::vector<JSONValue>>(data).at(index);
   }
 
+  // Const array accessing
+  const JSONValue& operator[](const int index) const
+  {
+    if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
+    return std::get<std::vector<JSONValue>>(data).at(index);
+  }
+
   // Accessing JSONObject
   JSONValue& operator[](const std::string& key)
   {
@@ -49,8 +56,19 @@ struct JSONValue
     return std::get<std::map<std::string, JSONValue>>(data).at(key);
   }
 
-  // Handling the c-style string
   JSONValue& operator[](const char* key)
+  {
+    return (*this)[std::string(key)];
+  }
+
+  // Const object accessing
+  const JSONValue& operator[](const std::string& key) const
+  {
+    if (!IsJSONObject()) throw std::runtime_error("Cannot access element of non-object JSON value");
+    return std::get<std::map<std::string, JSONValue>>(data).at(key);
+  }
+
+  const JSONValue& operator[](const char* key) const
   {
     return (*this)[std::string(key)];
   }
