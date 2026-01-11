@@ -209,10 +209,14 @@ std::string Parser::ParseString(const std::string_view& str)
       switch (str[i + 1]) // We check the char after the '\'
       {
         case '"': value += '"'; break;
-        case 'n': value += '\n'; break;
-        case 't': value += '\t'; break;
-        case 'r': value += '\r'; break;
         case '\\': value += '\\'; break;
+        case '/': value += '/'; break;
+        case 'b': value += '\b'; break;
+        case 'f': value += '\f'; break;
+        case 'n': value += '\n'; break;
+        case 'r': value += '\r'; break;
+        case 't': value += '\t'; break;
+        case 'u': value += HexToString(std::string(str.substr(i+2, 4))); i += 4; break;
         default: value += str[i + 1];
       }
       i++; // Eat the char
@@ -222,6 +226,44 @@ std::string Parser::ParseString(const std::string_view& str)
       value += str[i];
     }
   }
+  return value;
+}
+
+/**
+ * @brief Converts a hexadecimal string to its UTF-8 encoded representation.
+ *
+ * This method interprets a hexadecimal string as a Unicode code point and encodes it
+ * as a UTF-8 string.
+ *
+ * @param hex A string representing a Unicode code point in hexadecimal format.
+ * @return A string containing the UTF-8 encoded character corresponding to the input hexadecimal value.
+ */
+std::string Parser::HexToString(const std::string& hex)
+{
+  std::string value;
+  const int hexValue = std::stoi(std::string(hex), nullptr, 16);
+
+  // 1-Byte range
+  if (hexValue <= 0x7F)
+  {
+    value += static_cast<char>(hexValue);
+  }
+
+  // 2-Byte range
+  else if (hexValue <= 0x7FF)
+  {
+    value += static_cast<char>(0xC0 | ((hexValue >> 6) & 0x1F));
+    value += static_cast<char>(0x80 | (hexValue & 0x3F));
+  }
+
+  // 3-Byte range
+  else if (hexValue <= 0xFFFF)
+  {
+    value += static_cast<char>(0xE0 | ((hexValue >> 12) & 0x0F));
+    value += static_cast<char>(0x80 | ((hexValue >> 6) & 0x3F));
+    value += static_cast<char>(0x80 | (hexValue & 0x3F));
+  }
+
   return value;
 }
 

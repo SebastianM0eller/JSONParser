@@ -29,6 +29,7 @@ private:
   JSONValue ParseObject();
   JSONValue ParseArray();
   std::string ParseString(const std::string_view& str);
+  static std::string HexToString(const std::string& hex);
 
   [[nodiscard]] Token Peek() const;
   void Next();

@@ -7,22 +7,53 @@
 
 int main()
 {
-  // Test String with negative values
+  // The Source JSON uses strictly ASCII characters (escaped unicode)
   std::string source = R"(
 {
-    "sci_int": 1e3,
-    "sci_negative_exp": 1.5e-2,
-    "sci_uppercase": 5E+2,
-    "sci_signed": -4.2e1,
-    "sci_zero": 10e0
+    "ascii_test": "\u0041",
+    "latin_test": "\u00A9",
+    "greek_test": "\u03A9",
+    "currency_test": "\u20AC",
+    "chinese_test": "\u4F60\u597D"
 }
 )";
 
-  JSONValue val = JSON::Parse(source);
+  try
+  {
+    JSONValue root = JSON::Parse(source);
 
-  std::cout << static_cast<double>(val["sci_int"]) << std::endl;
-  std::cout << static_cast<double>(val["sci_negative_exp"]) << std::endl;
-  std::cout << static_cast<double>(val["sci_uppercase"]) << std::endl;
-  std::cout << static_cast<double>(val["sci_signed"]) << std::endl;
-  std::cout << static_cast<double>(val["sci_zero"]) << std::endl;
+    // Expected values using raw UTF-8 literals
+    // NOTE: Ensure this .cpp file is saved as UTF-8!
+    std::map<std::string, std::string> expected = {
+      {"ascii_test", "A"},            // \u0041
+      {"latin_test", "©"},            // \u00A9
+      {"greek_test", "Ω"},            // \u03A9
+      {"currency_test", "€"},         // \u20AC
+      {"chinese_test", "你好"}         // \u4F60 (Ni) + \u597D (Hao)
+    };
+
+    std::cout << "--- Unicode Escape Sequence Test ---" << std::endl;
+
+    for (const auto& [key, val] : expected)
+    {
+      std::string parsedValue = root[key];
+
+      if (parsedValue == val)
+      {
+        std::cout << "[PASS] " << key << ": " << parsedValue << std::endl;
+      }
+      else
+      {
+        std::cout << "[FAIL] " << key << "\n"
+                  << "  Expected: " << val << "\n"
+                  << "  Got:      " << parsedValue << std::endl;
+      }
+    }
+  }
+  catch (const std::exception& e)
+  {
+    std::cerr << "[CRITICAL ERROR] " << e.what() << std::endl;
+  }
+
+  return 0;
 }
