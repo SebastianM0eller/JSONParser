@@ -64,7 +64,6 @@ JSONValue val = JSON::Load("filename.json");
 ```
 
 ## Todo:
-- [ ] Add support for scientific notation e.g. 3e10, 1.3e-5 or -0.5e+2.
 - [ ] Add some tests to validate the library.
 - [ ] Add support for all standard escape sequences.
 - [ ] Add documentation on how to access data in the JSONValue.

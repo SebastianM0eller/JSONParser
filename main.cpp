@@ -10,35 +10,19 @@ int main()
   // Test String with negative values
   std::string source = R"(
 {
-    "temperature": -5,
-    "latitude": -45.67,
-    "coordinates": [ -100, 200, -30.5 ],
-    "balance": -0.0
+    "sci_int": 1e3,
+    "sci_negative_exp": 1.5e-2,
+    "sci_uppercase": 5E+2,
+    "sci_signed": -4.2e1,
+    "sci_zero": 10e0
 }
 )";
 
-  try
-  {
-    // 1. Parse
-    JSONValue root = JSON::Parse(source);
+  JSONValue val = JSON::Parse(source);
 
-    // 2. Extract Values
-    int temp = root["temperature"];
-    double lat = root["latitude"];
-    int coordX = root["coordinates"][0];   // Should be -100
-    double coordZ = root["coordinates"][2]; // Should be -30.5
-
-    // 3. Print Results
-    std::cout << "Temperature: " << temp << " (Expected: -5)" << std::endl;
-    std::cout << "Latitude:    " << lat  << " (Expected: -45.67)" << std::endl;
-    std::cout << "Coord X:     " << coordX << " (Expected: -100)" << std::endl;
-    std::cout << "Coord Z:     " << coordZ << " (Expected: -30.5)" << std::endl;
-
-  }
-  catch (const std::exception& e)
-  {
-    std::cerr << "Test Failed: " << e.what() << std::endl;
-  }
-
-  return 0;
+  std::cout << static_cast<double>(val["sci_int"]) << std::endl;
+  std::cout << static_cast<double>(val["sci_negative_exp"]) << std::endl;
+  std::cout << static_cast<double>(val["sci_uppercase"]) << std::endl;
+  std::cout << static_cast<double>(val["sci_signed"]) << std::endl;
+  std::cout << static_cast<double>(val["sci_zero"]) << std::endl;
 }

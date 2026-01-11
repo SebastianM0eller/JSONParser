@@ -171,8 +171,41 @@ Token Lexer::NumberToken()
       m_index++;
     }
 
+    if (m_index < m_source.length() && (m_source[m_index] == 'e' || m_source[m_index] == 'E'))
+    {
+      m_index++; // Eat the e/E
+
+      if (m_index < m_source.length() && (m_source[m_index] == '+' || m_source[m_index] == '-'))
+      {
+        m_index++; // Eat the sign
+      }
+
+      while (m_index < m_source.length() && std::isdigit(m_source[m_index]))
+      {
+        m_index++;
+      }
+    }
+
     return Token(TokenType::DOUBLE, m_source.substr(start, m_index - start));
   }
+
+  // Check if its scientific notation
+  if (m_index < m_source.length() && (m_source[m_index] == 'e' || m_source[m_index] == 'E'))
+  {
+    m_index++; // Eat the e/E
+
+    if (m_index < m_source.length() && (m_source[m_index] == '+' || m_source[m_index] == '-'))
+    {
+      m_index++; // Eat the sign
+    }
+
+    while (m_index < m_source.length() && std::isdigit(m_source[m_index]))
+    {
+      m_index++;
+    }
+  }
+
+  return Token(TokenType::DOUBLE, m_source.substr(start, m_index - start));
 
   // if it wasn't a decimal number, it's an integer.
   return Token(TokenType::INT, m_source.substr(start, m_index - start));
