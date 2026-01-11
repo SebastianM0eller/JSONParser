@@ -65,5 +65,4 @@ JSONValue val = JSON::Load("filename.json");
 
 ## Todo:
 - [ ] Add some tests to validate the library.
-- [ ] Add support for all standard escape sequences.
 - [ ] Add documentation on how to access data in the JSONValue.
