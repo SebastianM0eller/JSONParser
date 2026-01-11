@@ -46,7 +46,7 @@ int main() {
     try {
         JSONValue root = JSON::Parse(raw_json);
         
-        // Access values using array-style syntax
+        // Access values
         std::string name = root["name"];
         int score = root["score"];
         
