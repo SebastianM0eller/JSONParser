@@ -77,13 +77,6 @@ JSONValue Parser::ParseValue()
       return JSONValue(value);
     }
 
-  case TokenType::INT:
-    {
-      Next();
-      int value = std::stoi(std::string(token.value));
-      return JSONValue(value);
-    }
-
   case TokenType::DOUBLE:
     {
       Next();

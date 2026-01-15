@@ -23,11 +23,10 @@
  */
 struct JSONValue
 {
-  std::variant<std::monostate, int, double, bool, std::string, std::vector<JSONValue>, std::map<std::string, JSONValue>> data;
+  std::variant<std::monostate, double, bool, std::string, std::vector<JSONValue>, std::map<std::string, JSONValue>> data;
 
   // Helpers to determine the type of data.
   [[nodiscard]] bool IsNull() const { return std::holds_alternative<std::monostate>(data); }
-  [[nodiscard]] bool IsInt() const { return std::holds_alternative<int>(data); }
   [[nodiscard]] bool IsDouble() const { return std::holds_alternative<double>(data); }
   [[nodiscard]] bool IsBool() const { return std::holds_alternative<bool>(data); }
   [[nodiscard]] bool IsString() const { return std::holds_alternative<std::string>(data); }
@@ -70,9 +69,9 @@ struct JSONValue
     return std::get<std::vector<JSONValue>>(data).at(index);
   }
 
-  // ##################################
-  // Helper functions for the JSONArray
-  // ##################################
+  // ###################################
+  // Helper functions for the JSONObject
+  // ###################################
 
   /// Return the data as a const reference to std::map<std::string, JSONValue>
   /// Throws an error if the data is not a JSONObject
@@ -120,36 +119,51 @@ struct JSONValue
     return (*this)[std::string(key)];
   }
 
-  // Implicit conversions for regular data
-  operator std::string() const
+  // ###################################
+  // Helper function for type conversion
+  // ###################################
+
+  // Get string
+  [[nodiscard]] const std::string& ToString() const
   {
     if (!IsString()) throw std::runtime_error("Cannot convert non-string JSON value to string");
     return std::get<std::string>(data);
   }
 
-  operator int() const
+  [[nodiscard]] std::string& ToString()
   {
-    if (IsDouble())
-    {
-      return std::get<double>(data);
-    }
-
-    if (!IsInt()) throw std::runtime_error("Cannot convert non-integer JSON value to int");
-    return std::get<int>(data);
+    if (!IsString()) throw std::runtime_error("Cannot convert non-string JSON value to string");
+    return std::get<std::string>(data);
   }
 
-  operator double() const
+  // Get int
+  [[nodiscard]] int ToInt() const
   {
-    if (IsInt())
-    {
-      return std::get<int>(data);
-    }
+    if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
+    return static_cast<int>(std::get<double>(data));
+  }
 
+  // Get double
+  [[nodiscard]] double ToDouble() const
+  {
     if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
     return std::get<double>(data);
   }
 
-  operator bool() const
+  [[nodiscard]] double& ToDouble()
+  {
+    if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
+    return std::get<double>(data);
+  }
+
+  // Get bool
+  [[nodiscard]] bool ToBool() const
+  {
+    if (!IsBool()) throw std::runtime_error("Cannot convert non-bool JSON value to bool");
+    return std::get<bool>(data);
+  }
+
+  [[nodiscard]] bool& ToBool()
   {
     if (!IsBool()) throw std::runtime_error("Cannot convert non-bool JSON value to bool");
     return std::get<bool>(data);

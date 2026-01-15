@@ -36,7 +36,7 @@ int main()
 
     for (const auto& [key, val] : expected)
     {
-      std::string parsedValue = root[key];
+      const std::string& parsedValue = root[key].ToString();
 
       if (parsedValue == val)
       {
