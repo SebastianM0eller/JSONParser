@@ -34,40 +34,88 @@ struct JSONValue
   [[nodiscard]] bool IsJSONArray() const { return std::holds_alternative<std::vector<JSONValue>>(data); }
   [[nodiscard]] bool IsJSONObject() const { return std::holds_alternative<std::map<std::string, JSONValue>>(data); }
 
-  // Accessing JSONArray
-  JSONValue& operator[](const int index)
+  // ##################################
+  // Helper functions for the JSONArray
+  // ##################################
+
+  /// Return the data as a const std::vector<JSONValue> reference
+  /// Throws an error if the data is not a JSONArray
+  [[nodiscard]] const std::vector<JSONValue>& AsArray() const
   {
     if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
-    return std::get<std::vector<JSONValue>>(data).at(index);
+    return std::get<std::vector<JSONValue>>(data);
   }
 
-  // Const array accessing
+  /// Return the data as an std::vector<JSONValue> reference
+  /// Throws an error if the data is not a JSONArray
+  [[nodiscard]] std::vector<JSONValue>& AsArray()
+  {
+    if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
+    return std::get<std::vector<JSONValue>>(data);
+  }
+
+  /// Return a const reference to the data at the given index.
+  /// Throws an error if the data is not a JSONArray
   const JSONValue& operator[](const int index) const
   {
     if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
     return std::get<std::vector<JSONValue>>(data).at(index);
   }
 
-  // Accessing JSONObject
-  JSONValue& operator[](const std::string& key)
+  /// Return a reference to the data at the given index.
+  /// Throws an error if the data is not a JSONArray
+  JSONValue& operator[](const int index)
+  {
+    if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
+    return std::get<std::vector<JSONValue>>(data).at(index);
+  }
+
+  // ##################################
+  // Helper functions for the JSONArray
+  // ##################################
+
+  /// Return the data as a const reference to std::map<std::string, JSONValue>
+  /// Throws an error if the data is not a JSONObject
+  [[nodiscard]] const std::map<std::string, JSONValue>& AsObject() const
   {
     if (!IsJSONObject()) throw std::runtime_error("Cannot access element of non-object JSON value");
-    return std::get<std::map<std::string, JSONValue>>(data).at(key);
+    return std::get<std::map<std::string, JSONValue>>(data);
   }
 
-  JSONValue& operator[](const char* key)
+  /// Return the data as a reference to std::map<std::string, JSONValue>
+  /// Throws an error if the data is not a JSONObject
+  [[nodiscard]] std::map<std::string, JSONValue>& AsObject()
   {
-    return (*this)[std::string(key)];
+    if (!IsJSONObject()) throw std::runtime_error("Cannot access element of non-object JSON value");
+    return std::get<std::map<std::string, JSONValue>>(data);
   }
 
-  // Const object accessing
+  /// Return a const reference to the data at the given index.
+  /// Throws an error if the data is not a JSONObject
   const JSONValue& operator[](const std::string& key) const
   {
     if (!IsJSONObject()) throw std::runtime_error("Cannot access element of non-object JSON value");
     return std::get<std::map<std::string, JSONValue>>(data).at(key);
   }
 
+  /// Return a const reference to the data at the given index.
+  /// Throws an error if the data is not a JSONObject
   const JSONValue& operator[](const char* key) const
+  {
+    return (*this)[std::string(key)];
+  }
+
+  /// Return a reference to the data at the given index.
+  /// Throws an error if the data is not a JSONObject
+  JSONValue& operator[](const std::string& key)
+  {
+    if (!IsJSONObject()) throw std::runtime_error("Cannot access element of non-object JSON value");
+    return std::get<std::map<std::string, JSONValue>>(data).at(key);
+  }
+
+  /// Return a reference to the data at the given index.
+  /// Throws an error if the data is not a JSONObject
+  JSONValue& operator[](const char* key)
   {
     return (*this)[std::string(key)];
   }
