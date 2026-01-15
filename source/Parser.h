@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "../include/JSONValue.h"
+#include "../include/JSON.h"
 #include "../source/Token.h"
 
 /**

@@ -33,7 +33,6 @@ target_link_libraries(MyApp PRIVATE JSONParser)
 
 ```C++
 #include <JSON.h>
-// JSONValue.h is automatically included
 ```
 **Parsing a string:**
 ```C++
