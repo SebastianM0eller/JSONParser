@@ -24,6 +24,7 @@
 struct JSONValue
 {
   std::variant<std::monostate, double, bool, std::string, std::vector<JSONValue>, std::map<std::string, JSONValue>> data;
+  static const JSONValue nullValue;
 
   // Helpers to determine the type of data.
   [[nodiscard]] bool IsNull() const { return std::holds_alternative<std::monostate>(data); }
@@ -54,15 +55,24 @@ struct JSONValue
   }
 
   /// Return a const reference to the data at the given index.
-  /// Throws an error if the data is not a JSONArray
+  /// Throws an error if the data is not a JSONArray.
+  /// @warning Returns a std::monostate if the index is invalid
   const JSONValue& operator[](const int index) const
   {
     if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
-    return std::get<std::vector<JSONValue>>(data).at(index);
+    try
+    {
+      return std::get<std::vector<JSONValue>>(data).at(index);
+    }
+    catch (const std::out_of_range&)
+    {
+      return nullValue;
+    }
   }
 
   /// Return a reference to the data at the given index.
   /// Throws an error if the data is not a JSONArray
+  /// Throws a std::out_of_range error if the index is invalid.
   JSONValue& operator[](const int index)
   {
     if (!IsJSONArray()) throw std::runtime_error("Cannot access element of non-array JSON value");
@@ -91,10 +101,18 @@ struct JSONValue
 
   /// Return a const reference to the data at the given index.
   /// Throws an error if the data is not a JSONObject
+  /// @warning Returns a std::monostate if the index is invalid
   const JSONValue& operator[](const std::string& key) const
   {
     if (!IsJSONObject()) throw std::runtime_error("Cannot access element of non-object JSON value");
-    return std::get<std::map<std::string, JSONValue>>(data).at(key);
+    try
+    {
+      return std::get<std::map<std::string, JSONValue>>(data).at(key);
+    }
+    catch (const std::out_of_range&)
+    {
+      return nullValue;
+    }
   }
 
   /// Return a const reference to the data at the given index.
