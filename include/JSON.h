@@ -26,6 +26,9 @@ struct JSONValue
   std::variant<std::monostate, double, bool, std::string, std::vector<JSONValue>, std::map<std::string, JSONValue>> data;
   static const JSONValue nullValue;
 
+  // Helper for saving the JSONValue as a .json file
+  [[nodiscard]] std::string ToString() const;
+
   // Helpers to determine the type of data.
   [[nodiscard]] bool IsNull() const { return std::holds_alternative<std::monostate>(data); }
   [[nodiscard]] bool IsDouble() const { return std::holds_alternative<double>(data); }
@@ -144,7 +147,7 @@ struct JSONValue
   // ###################################
 
   // Get string
-  [[nodiscard]] std::string& ToString()
+  [[nodiscard]] std::string& AsString()
   {
 
     if (IsNull()) data = std::string("");
@@ -152,7 +155,7 @@ struct JSONValue
     return std::get<std::string>(data);
   }
 
-  [[nodiscard]] const std::string& ToString() const
+  [[nodiscard]] const std::string& AsString() const
   {
     if (IsNull()) {static const std::string emptyString = ""; return emptyString;}
     if (!IsString()) throw std::runtime_error("Cannot convert non-string JSON value to string");
@@ -160,14 +163,14 @@ struct JSONValue
   }
 
   // Get int
-  [[nodiscard]] int ToInt() const
+  [[nodiscard]] int AsInt() const
   {
     if (IsNull()) return 0;
     if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
     return static_cast<int>(std::get<double>(data));
   }
 
-  [[nodiscard]] int ToInt()
+  [[nodiscard]] int AsInt()
   {
     if (IsNull()) data = 0.0;
     if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
@@ -175,14 +178,14 @@ struct JSONValue
   }
 
   // Get double
-  [[nodiscard]] double ToDouble() const
+  [[nodiscard]] double AsDouble() const
   {
     if (IsNull()) return 0.0;
     if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
     return std::get<double>(data);
   }
 
-  [[nodiscard]] double& ToDouble()
+  [[nodiscard]] double& AsDouble()
   {
     if (IsNull()) data = 0.0;
     if (!IsDouble()) throw std::runtime_error("Cannot convert non-double JSON value to double");
@@ -190,14 +193,14 @@ struct JSONValue
   }
 
   // Get bool
-  [[nodiscard]] bool ToBool() const
+  [[nodiscard]] bool AsBool() const
   {
     if (IsNull()) return false;
     if (!IsBool()) throw std::runtime_error("Cannot convert non-bool JSON value to bool");
     return std::get<bool>(data);
   }
 
-  [[nodiscard]] bool& ToBool()
+  [[nodiscard]] bool& AsBool()
   {
     if (IsNull()) data = false;
     if (!IsBool()) throw std::runtime_error("Cannot convert non-bool JSON value to bool");
@@ -218,4 +221,5 @@ class JSON
 public:
   static JSONValue Parse(const std::string& source);
   static JSONValue LoadFromFile(const std::string& filepath);
+  static void SaveToFile(const std::string& filepath, const JSONValue& value);
 };

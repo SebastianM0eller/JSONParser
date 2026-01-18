@@ -6,7 +6,51 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include <fstream>
+#include <iostream>
 #include <sstream>
+
+/**
+ * Converts the JSONValue instance into its string representation.
+ *
+ * The output format depends on the type of the contained value:
+ * - A numeric value is converted to its string equivalent.
+ * - A boolean value is converted to "true" or "false".
+ * - A string value is enclosed in double quotes.
+ * - A JSON array is represented as a comma-separated list enclosed in square brackets.
+ * - A JSON object is represented as a comma-separated list of key-value pairs enclosed in curly braces,
+ *   where keys are strings enclosed in double quotes.
+ *
+ * @return A string representation of the JSONValue instance.
+ */
+std::string JSONValue::ToString() const
+{
+  if (IsDouble()) return std::to_string(AsDouble());
+
+  if (IsBool()) return AsBool() ? "true" : "false";
+
+  if (IsString()) return "\"" + AsString() + "\"";
+
+  if (IsJSONArray())
+  {
+    std::string result = "[";
+    for (const auto& element : AsArray())
+    {
+      result += element.ToString() + ", ";
+    }
+    return result.substr(0, result.size() - 2) + "]";
+  }
+
+  if (IsJSONObject())
+  {
+    std::string result = "{";
+    for (const auto& [key, value] : AsObject())
+    {
+      result += "\"" + key + "\": " + value.ToString() + ", ";
+    }
+    return result.substr(0, result.size() - 2) + "}";
+  }
+  return "";
+}
 
 /**
  * Parses a JSON string and returns its corresponding JSONValue representation.
@@ -40,4 +84,18 @@ JSONValue JSON::LoadFromFile(const std::string& filepath)
   buffer << file.rdbuf();
 
   return Parse(buffer.str());
+}
+
+void JSON::SaveToFile(const std::string& filepath, const JSONValue& value)
+{
+  const std::string json = value.ToString();
+  std::ofstream file(filepath, std::ios::out | std::ios::trunc);
+
+  if (!file.is_open())
+  {
+    std::cerr << "Could not open file: " + filepath << std::endl;
+  }
+
+  file << json;
+  file.close();
 }
