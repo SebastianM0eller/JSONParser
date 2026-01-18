@@ -217,5 +217,5 @@ class JSON
 {
 public:
   static JSONValue Parse(const std::string& source);
-  static JSONValue Load(const std::string& filepath);
+  static JSONValue LoadFromFile(const std::string& filepath);
 };

@@ -28,7 +28,7 @@ JSONValue JSON::Parse(const std::string& source)
  * @return A JSONValue object representing the parsed JSON content.
  * @throws std::runtime_error If the file could not be opened or its contents could not be parsed.
  */
-JSONValue JSON::Load(const std::string& filepath)
+JSONValue JSON::LoadFromFile(const std::string& filepath)
 {
   std::ifstream file(filepath);
   if (!file.is_open())
