@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <iostream>
 #include <variant>
 #include <vector>
 #include <map>
@@ -28,6 +29,16 @@ struct JSONValue
 
   // Helper for saving the JSONValue as a .json file
   [[nodiscard]] std::string ToString() const;
+
+  void PrintType() const
+  {
+    if (IsNull()) std::cout << "null";
+    else if (IsDouble()) std::cout << "double";
+    else if (IsBool()) std::cout << "bool";
+    else if (IsString()) std::cout << "string";
+    else if (IsJSONArray()) std::cout << "array";
+    else if (IsJSONObject()) std::cout << "object";
+  }
 
   // Helpers to determine the type of data.
   [[nodiscard]] bool IsNull() const { return std::holds_alternative<std::monostate>(data); }
