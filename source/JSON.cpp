@@ -3,6 +3,9 @@
 //
 
 #include "JSON.h"
+
+#include <filesystem>
+
 #include "Lexer.h"
 #include "Parser.h"
 #include <fstream>
@@ -88,7 +91,17 @@ JSONValue JSON::LoadFromFile(const std::string& filepath)
 
 void JSON::SaveToFile(const std::string& filepath, const JSONValue& value)
 {
+  // Make sure the path exist
+  std::filesystem::path path(filepath);
+  std::filesystem::path dir = path.parent_path();
+
+  if (!dir.empty() && !std::filesystem::exists(dir))
+  {
+    std::filesystem::create_directories(dir);
+  }
+
   const std::string json = value.ToString();
+
   std::ofstream file(filepath, std::ios::out | std::ios::trunc);
 
   if (!file.is_open())
