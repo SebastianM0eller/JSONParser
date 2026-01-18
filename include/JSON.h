@@ -34,6 +34,8 @@ struct JSONValue
   [[nodiscard]] bool IsJSONArray() const { return std::holds_alternative<std::vector<JSONValue>>(data); }
   [[nodiscard]] bool IsJSONObject() const { return std::holds_alternative<std::map<std::string, JSONValue>>(data); }
 
+  JSONValue& operator=(const JSONValue& other) = default;
+
   // ##################################
   // Helper functions for the JSONArray
   // ##################################
